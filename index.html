@@ -15,6 +15,10 @@
             background-size: cover;
             height: 100vh;
         }
+
+        #weather-status {
+            display: none;
+        }
     </style>
 </head>
 
@@ -22,19 +26,52 @@
     <div class="container">
         <form class="col-md-6 m-auto py-5">
             <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Enter a location for Weather ...">
+                <input type="text" id="location-input" class="form-control"
+                    placeholder="Enter a location for Weather ...">
                 <div class="input-group-append">
-                    <button type="button" class="btn btn-danger">Search</button>
+                    <button type="button" id="search-button" class="btn btn-danger">Search</button>
                 </div>
             </div>
         </form>
-        <div class="weather-status text-white text-center">
-            <img src="https://openweathermap.org/img/wn/02d@2x.png" alt="">
-            <h1>Dhaka</h1>
-            <h3><span>38.06</span>&deg;C</h3>
-            <h1 class="lead">Clouds</h1>
+        <div id="weather-status" class=" text-white text-center">
+            <img id="weather-icon" src="https://openweathermap.org/img/wn/02d@2x.png" alt="">
+            <h1 id="location-name">Dhaka</h1>
+            <h3><span id="temp">38.06</span>&deg;C</h3>
+            <h1 id="weather-like">Clouds</h1>
         </div>
     </div>
+
+
+    <script>
+        // API KEY
+        const apiKey = "3d6ed39cbb8250a885039c2a704fff37";
+
+        const weatherIcon = document.getElementById('weather-icon')
+        const getCityName = document.getElementById('location-input')
+        const cityName = document.getElementById('location-name')
+        const temperature = document.getElementById('temp')
+        const weather = document.getElementById('weather-like')
+
+        document.getElementById('search-button').addEventListener('click', function () {
+            fetch(`http://api.openweathermap.org/data/2.5/weather?q=${getCityName.value}&appid=${apiKey}`)
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+
+                    const weatherStatus = document.getElementById("weather-status");
+                    weatherStatus.style.display = "block"
+
+                    // weatherIcon.src=data.weather[0].icon
+                    cityName.innerText = `${data.name}, ${data.sys.country}`;
+                    temperature.innerText = data.main.temp
+                    weather.innerText = data.weather[0].main
+                })
+        })
+
+
+
+
+    </script>
 
 </body>
 
